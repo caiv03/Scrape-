@@ -1,0 +1,62 @@
+function sendTimedFormatMails() {
+  //MAKE YOUR PDF PUBLIC AND INSERT PDF URL HERE! MAKE SURE IT IS THE RIGHT ONE FOR YOUR COMPANY!
+  var file = DriveApp.getFileById('1S7q3PZgNkcybEvRVWPzGhuZns_hEIJ-Z');
+  var wrkbk = SpreadsheetApp.getActiveSpreadsheet();
+  var wrkshtmail = wrkbk.getSheetByName("Emails");
+  var wrkshtmsg = wrkbk.getSheetByName("Message");
+
+  var baseSubject = wrkshtmsg.getRange('B2').getValue();
+  var ccEmail = wrkshtmail.getRange('C2').getValue();
+  var companyname = wrkshtmsg.getRange('B6').getValue();
+  var senderEmail = wrkshtmail.getRange('F2').getValue();
+  var senderName = wrkshtmail.getRange('E2').getValue();
+  var signature = 
+    <p style="color: #000000; margin: 0; padding: 0;">Best regards,</p>
+    <p style="color: #0D3C71; margin: 0; padding: 0;"><b>${senderName}</b></p>
+    <p style="color: #0D3C71; margin: 0; padding: 0;"><b>Europe Team Analyst</b></p>
+    <p><a href="www.tigbournecapital.com" target="_blank"><img src="https://lh7-us.googleusercontent.com/QBIJagFEeTLEsWIrsnyKAD3HXDHyI59oLQ2tobsOvzJv2I8sFxxoX40vsvM_BhYMisFKH05Y-u0alI-6IXjF-UPhcFBwnnc3Apj77Gwt0AcFUARnbHmFf2ZEFpFPNxIQgZvVkz1pjHOiYj9Kyz7XQd0" alt="Company Logo" style="width: 125px;"></a></p>
+    <p style="color: #0D3C71; margin: 0; padding: 0;"><b>Tigbourne Capital LTD.</b></p>
+    <p style="color: #0D3C71; margin: 0; padding: 0;"><b>+1 (203) 246-2310</b></p>
+    <p style="color: #0D3C71; margin: 0; padding: 0;"><a href="https://tigbournecapital.com" style="color: #0D3C71; text-decoration: none;"><b>TigbourneCapital.com</b></a></p>
+  ;
+
+  for (var i = 2; i <= 16; i++) {
+    var name = wrkshtmail.getRange('A' + i).getValue();
+    var emailadd = wrkshtmail.getRange('B' + i).getValue();
+    var subject = baseSubject;
+
+    var message = 
+      <p style="color: #000000;">Hi ${name},</p>
+      <p style="color: #000000;">Tigbourne Capital Ltd is financing the path-breaking Organic Oil Recovery. We collaborate with forward-thinking businesses like Titan and Hunting, who created Organic Oil Recovery (OOR) technology.</p>
+      <p style="color: #000000;">OOR: A Long-Term Benefit for ${companyname}</p>
+      <p style="color: #000000;">OOR uses natural bacteria to effectively and sustainably recover trapped oil, going beyond conventional MEOR techniques. This is what makes it unique:</p>
+      <ul style="color: #000000;">
+        <li><b>Up to 50% Greater Production:</b> Extract more oil from already-drilled wells while making the most use of available resources.</li>
+        <li><b>30% Lower CO2 Emissions & Water Cut:</b> Comply with ${companyname}'s sustainability objectives while lessening your environmental impact.</li>
+        <li><b>Demonstrated Achievement:</b> A 98% success rate and more than 500 successful tests show reliable performance.</li>
+      </ul>
+      <p style="color: #000000;">Advantages Designed Just for ${companyname}:</p>
+      <ul style="color: #000000;">
+        <li><b>Enhanced Oil Recovery:</b> Unlock untapped oil reserves to maximize resource utilization.</li>
+        <li><b>Sustainability:</b> Reduce environmental impact and align with ${companyname}'s sustainability goals.</li>
+        <li><b>Operational Efficiency:</b> Integrate seamlessly with existing infrastructure for minimal disruption.</li>
+      </ul>
+      <p style="color: #000000;">I would love the opportunity to discuss how working with us can deliver these results for ${companyname}. Could we schedule a call next week to explore this opportunity in more detail?</p>
+      <p style="color: #000000;">Please find attached the summary deck showing the OOR Technology, Track record and the benefits of OOR-Linked Finance.</p>
+      <p style="color: #000000;">Thank you for considering this opportunity.</p>
+      ${signature}
+    ;
+
+    MailApp.sendEmail({
+      to: emailadd,
+      cc: ccEmail,
+      subject: subject,
+      htmlBody: message,
+      attachments: [file.getAs(MimeType.PDF)],
+      name: senderName,
+      from: ${senderName} <${senderEmail}>
+    });
+
+    Utilities.sleep(120000); // Pause for 120 sec
+  }
+}
